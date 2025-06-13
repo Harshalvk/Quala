@@ -11,8 +11,8 @@ export default async function GetUser() {
   const user = session?.user;
 
   if (!user) {
-    throw new Error("Unauthenticated");
+    redirect("/sign-in");
   }
 
-  return session.user;
+  return user;
 }
