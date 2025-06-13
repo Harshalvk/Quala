@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { ArrowLeft, Heading } from "lucide-react";
+import ModeToggle from "./ModeToggle";
 
 interface DashboardPageProps {
   title: string;
@@ -31,6 +32,7 @@ const DashboardPage = ({
           </div>
           {cta ? <div className="w-full">{cta}</div> : null}
         </div>
+        <ModeToggle />
       </div>
       <div className="flex-1 p-6 sm:p-8 flex flex-col overflow-y-auto h-full w-full">
         {children}

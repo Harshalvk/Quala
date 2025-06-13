@@ -85,7 +85,7 @@ const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <h2 className="text-lg/7 font-medium tracking-tight text-gray-950">
+            <h2 className="text-lg/7 font-medium tracking-tight">
               New Event Category
             </h2>
             <p>Create a new category to organize your events.</p>
@@ -119,9 +119,9 @@ const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
                     type="button"
                     className={cn(
                       `bg-[${premadeColor}]`,
-                      "size-10 rounded-full ring-2 ring-offset-2 transition-all",
+                      "size-10 rounded-full ring-2 transition-all",
                       color === premadeColor
-                        ? "ring-zinc-300 dark:ring-white scale-110"
+                        ? "ring-zinc-300 dark:ring-zinc-100 scale-110"
                         : "ring-transparent hover:scale-105"
                     )}
                     onClick={() => setValue("color", premadeColor)}
@@ -145,8 +145,8 @@ const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
                     className={cn(
                       "size-10 flex items-center justify-center text-xl rounded-md transition-all",
                       selectedEmoji === emoji
-                        ? "bg-zinc-100 ring-2 ring-zinc-200 scale-110"
-                        : "ring-transparent hover:scale-105 bg-zinc-100"
+                        ? "bg-zinc-100 dark:bg-zinc-400 ring-2 ring-zinc-200 dark:ring-zinc-100 scale-110"
+                        : "ring-transparent hover:scale-105 bg-zinc-100 dark:bg-zinc-400"
                     )}
                     onClick={() => setValue("emoji", emoji)}
                   >
