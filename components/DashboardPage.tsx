@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
 import { Button } from "./ui/button";
 import { ArrowLeft, Heading } from "lucide-react";
 import ModeToggle from "./ModeToggle";
+import { useRouter } from "next/navigation";
 
 interface DashboardPageProps {
   title: string;
@@ -16,13 +19,17 @@ const DashboardPage = ({
   cta,
   hideBackButton,
 }: DashboardPageProps) => {
+  const router = useRouter();
   return (
     <section className="flex-1 h-screen w-full flex flex-col">
       <div className="w-full p-6 sm:p-8 flex justify-between border-b">
         <div className="w-full flex flex-col sm:flex-row items-start gap-y-5 gap-x-5">
           <div className="flex gap-3 items-center">
             {hideBackButton ? null : (
-              <Button variant={"outline"}>
+              <Button
+                variant={"outline"}
+                onClick={() => router.push("/dashboard")}
+              >
                 <ArrowLeft />
               </Button>
             )}
