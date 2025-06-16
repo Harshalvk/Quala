@@ -12,6 +12,7 @@ const Dashboard = async () => {
   return (
     <DashboardPage
       title="Dashboard"
+      hideBackButton
       cta={
         <CreateEventCategoryModal>
           <Button className="w-full sm:w-fit">
