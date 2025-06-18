@@ -2,9 +2,10 @@
 
 import React from "react";
 import { Button } from "./ui/button";
-import { ArrowLeft, Heading } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import ModeToggle from "./ModeToggle";
 import { useRouter } from "next/navigation";
+import Heading from "@/components/Heading";
 
 interface DashboardPageProps {
   title: string;
@@ -33,9 +34,7 @@ const DashboardPage = ({
                 <ArrowLeft />
               </Button>
             )}
-            <h1 className="text-2xl md:text-3xl font-semibold font-sans">
-              {title}
-            </h1>
+            <Heading>{title}</Heading>
           </div>
           {cta ? <div className="w-full">{cta}</div> : null}
         </div>
