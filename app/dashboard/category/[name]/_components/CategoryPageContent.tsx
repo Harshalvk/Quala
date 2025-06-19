@@ -7,10 +7,41 @@ import EmptyCategoryState from "./EmptyCategoryState";
 import { useSearchParams } from "next/navigation";
 import GetEventsByCategoryName from "@/actions/getEventsByCategoryName";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import EmptyStateCard from "@/components/EmptyStateCard";
-import { BarChart, DollarSign } from "lucide-react";
+import { ArrowUpDown, BarChart, DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { isAfter, isToday, startOfMonth, startOfWeek } from "date-fns";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  Row,
+  SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import Heading from "@/components/Heading";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+// Define Event type with 'fields' property
+type Event = {
+  id: string;
+  category: string;
+  createdAt: Date;
+  deliveryStatus: string;
+  fields: Record<string, any>;
+};
 
 interface CategoryPageContentProps {
   hasEvents: boolean;
@@ -62,6 +93,94 @@ const CategoryPageContent = ({
     },
     refetchOnWindowFocus: false,
     enabled: pollingData.hasEvents,
+  });
+
+  const columns: ColumnDef<Event>[] = useMemo(
+    () => [
+      {
+        accessorKey: "category",
+        header: "Category",
+        cell: () => <span>{category.name || "Uncategorized"}</span>,
+      },
+      {
+        accessorKey: "createdAt",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant={"ghost"}
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              Date
+              <ArrowUpDown className="size-4" />
+            </Button>
+          );
+        },
+        cell: ({ row }) => {
+          return new Date(row.getValue("createdAt")).toLocaleString();
+        },
+      },
+      ...(data?.events[0]
+        ? Object.keys(data.events[0].fields as object).map((field) => ({
+            accessorFn: (row: Event) =>
+              (row.fields as Record<string, any>)[field],
+            header: field,
+            cell: ({ row }: { row: Row<Event> }) =>
+              (row.original.fields as Record<string, any>)[field] || "-",
+          }))
+        : []),
+      {
+        accessorKey: "deliveryStatus",
+        header: "Delivery Status",
+        cell: ({ row }) => (
+          <span
+            className={cn("px-2 py-1 rounded-full text-xs font-semibold", {
+              "bg-green-100 text-green-800":
+                row.getValue("deliveryStatus") === "DELIVERED",
+              "bg-red-100 text-red-800":
+                row.getValue("deliveryStatus") === "FAILED",
+              "bg-yellow-100 text-yellow-800":
+                row.getValue("deliveryStatus") === "PENDING",
+            })}
+          >
+            {row.getValue("deliveryStatus")}
+          </span>
+        ),
+      },
+    ],
+    [category.name, data?.events]
+  );
+
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  const table = useReactTable<Event>({
+    data: (data?.events || []).map((event) => ({
+      ...event,
+      category: category.name,
+      fields:
+        event.fields &&
+        typeof event.fields === "object" &&
+        !Array.isArray(event.fields)
+          ? (event.fields as Record<string, any>)
+          : {},
+    })),
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    manualPagination: true,
+    pageCount: Math.ceil((data?.eventsCount || 0) / pagination.pageSize),
+    onPaginationChange: setPageination,
+    state: {
+      sorting,
+      columnFilters,
+      pagination,
+    },
   });
 
   const numericFieldSums = useMemo(() => {
@@ -193,6 +312,87 @@ const CategoryPageContent = ({
           </div>
         </TabsContent>
       </Tabs>
+
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <div className="w-full flex flex-col gap-4">
+            <Heading className="text-2xl">Event Overview</Heading>
+          </div>
+        </div>
+        <Card>
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {isFetching ? (
+                [...Array(5)].map((_, rowIndex) => (
+                  <TableRow key={rowIndex}>
+                    {columns.map((_, cellIndex) => (
+                      <TableCell key={cellIndex}>
+                        <div className="h-4 w-full animate-pulse bg-muted-foreground/20 rounded" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : table.getRowModel().rows.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </Card>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant={"outline"}
+          size={"sm"}
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage() || isFetching}
+        >
+          Previous
+        </Button>
+        <Button
+          variant={"outline"}
+          size={"sm"}
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage() || isFetching}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 };
