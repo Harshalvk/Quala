@@ -2,6 +2,7 @@
 
 import { buttonVariants } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
+import UserAccount from "@/components/UserAccount";
 import { cn } from "@/lib/utils";
 import { Gem, Home, Key, LucideIcon, Menu, Settings, X } from "lucide-react";
 import Link from "next/link";
@@ -77,8 +78,9 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
         </ul>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <hr className="my-4 md:my-6 w-full h-px" />
+        <UserAccount />
       </div>
     </div>
   );
