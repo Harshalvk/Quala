@@ -67,7 +67,10 @@ const DashboardPageContent = () => {
 
             <div className="pointer-events-none z-0 absolute inset-px rounded-lg shadow-sm transition-all duration-300 group-hover:shadow-md ring-1 ring-black/5 dark:ring-white/10 dark:bg-gradient-to-br dark:from-transparent dark:to-zinc-900/50" />
 
-            <div className="relative p-6 z-10">
+            <div className="relative p-6 z-10 overflow-hidden">
+              <div className="absolute top-0 -right-14 -rotate-12 grayscale opacity-20 text-9xl">
+                {category.emoji}
+              </div>
               <div className="flex items-center gap-4 mb-6">
                 <div
                   className="size-12 rounded-full"
@@ -79,7 +82,7 @@ const DashboardPageContent = () => {
                 />
                 <div>
                   <h3 className="text-lg/7 font-medium tracking-tight">
-                    {category.emoji || "📍"} {category.name}
+                    {category.name}
                   </h3>
                   <p className="text-sm/6 text-gray-600">
                     {format(category.createdAt, "MMM d, yyyy")}
