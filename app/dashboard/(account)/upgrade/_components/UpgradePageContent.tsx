@@ -1,18 +1,29 @@
 "use client";
 
 import GetUsage from "@/actions/getUsage";
+import StripeCreateCheckoutSession from "@/actions/stripeCreateCheckoutSession";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Plan } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { BarChart } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const UpgradePageContent = ({ plan }: { plan: Plan }) => {
+  const router = useRouter();
+
   const { data: usageData, isPending } = useQuery({
     queryKey: ["usage"],
     queryFn: GetUsage,
+  });
+
+  const { mutate: createCheckoutSession } = useMutation({
+    mutationFn: StripeCreateCheckoutSession,
+    onSuccess: ({ url }) => {
+      if (url) router.push(url);
+    },
   });
 
   return (
@@ -81,7 +92,10 @@ const UpgradePageContent = ({ plan }: { plan: Plan }) => {
           <span className="w-24 h-4 inline bg-muted-foreground animate-pulse ml-1 rounded-lg" />
         )}
         {plan !== "PRO" ? (
-          <span className="inline underline text-white cursor-pointer ml-1">
+          <span
+            onClick={() => createCheckoutSession()}
+            className="inline underline text-white cursor-pointer ml-1"
+          >
             or upgrade now to increase your limit &rarr;
           </span>
         ) : null}
