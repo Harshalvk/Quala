@@ -2,11 +2,23 @@
 
 import { prisma } from "@/lib/prisma";
 import { addMonths, startOfMonth } from "date-fns";
-import GetUser from "./getUser";
 import { FREE_QUOTA, PRO_QUOTA } from "@/lib/config";
 
-export default async function GetUsage() {
-  const user = await GetUser();
+export default async function GetUsage(userId: string) {
+  if (!userId && typeof userId !== "string") {
+    return null;
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    return null;
+  }
+
   const currentDate = startOfMonth(new Date());
 
   const userDB = await prisma.user.findUnique({
