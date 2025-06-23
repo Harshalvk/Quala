@@ -1,10 +1,10 @@
 "use server";
 
 import { EVENT_CATEGORY_VALIDATOR } from "@/lib/validators/category.validator";
-import GetUser from "./getUser";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { parseColor } from "@/lib/utils";
+import GetUser from "./getUser";
 
 export default async function CreateEventCategory(
   formData: z.infer<typeof EVENT_CATEGORY_VALIDATOR>
