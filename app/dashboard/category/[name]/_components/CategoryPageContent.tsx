@@ -1,8 +1,8 @@
 "use client";
 
 import { EventCategory } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
-import React, { useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useEffect, useMemo, useState } from "react";
 import EmptyCategoryState from "./EmptyCategoryState";
 import { useSearchParams } from "next/navigation";
 import GetEventsByCategoryName from "@/actions/getEventsByCategoryName";
@@ -66,12 +66,7 @@ const CategoryPageContent = ({
     pageSize: limit,
   });
 
-  const { data: pollingData } = useQuery({
-    queryKey: ["category", category.name, "hasEvents"],
-    initialData: { hasEvents: initialHasEvents },
-  });
-
-  if (!pollingData.hasEvents) {
+  if (!initialHasEvents) {
     return <EmptyCategoryState categoryName={category.name} />;
   }
 
@@ -92,8 +87,29 @@ const CategoryPageContent = ({
       });
     },
     refetchOnWindowFocus: false,
-    enabled: pollingData.hasEvents,
+    enabled: initialHasEvents,
   });
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const eventSource = new EventSource("/api/sse");
+
+    eventSource.onmessage = (e) => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          "events",
+          category.name,
+          pagination.pageIndex,
+          pagination.pageSize,
+          activeTab,
+        ],
+      });
+    };
+    return () => {
+      eventSource.close();
+    };
+  }, []);
 
   const columns: ColumnDef<Event>[] = useMemo(
     () => [
@@ -133,7 +149,7 @@ const CategoryPageContent = ({
       {
         accessorKey: "deliveryStatus",
         header: "Delivery Status",
-        cell: ({ row }) => (
+        cell: ({ row }: { row: Row<Event> }) => (
           <span
             className={cn("px-2 py-1 rounded-full text-xs font-semibold", {
               "bg-green-100 text-green-800":

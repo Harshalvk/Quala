@@ -165,6 +165,13 @@ export const POST = async (req: NextRequest) => {
           count: 1,
         },
       });
+
+      if (globalThis.latestSSEWriter) {
+        const encoder = new TextEncoder();
+        globalThis.latestSSEWriter.write(
+          encoder.encode(`data: ${JSON.stringify({ eventId: event.id })}\n\n`)
+        );
+      }
     } catch (error) {
       await prisma.event.update({
         where: {
