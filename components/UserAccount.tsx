@@ -11,20 +11,28 @@ import {
 import Link from "next/link";
 import UserAvatar from "./UserAvatar";
 import { authClient } from "@/lib/auth-client";
-import { useQuery } from "@tanstack/react-query";
-import GetUser from "@/actions/getUser";
 import { Skeleton } from "./ui/skeleton";
 import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const UserAccount = () => {
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
   const handleLogout = async () => {
-    await authClient.signOut();
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+        },
+      },
+    });
   };
 
-  const { data: user } = useQuery({
-    queryKey: ["user"],
-    queryFn: GetUser,
-  });
+  if (!session) {
+    return <div>Could not found session. Please login</div>;
+  }
+
+  const user = session.user;
 
   if (!user) {
     return <Skeleton className="h-10 w-full" />;
