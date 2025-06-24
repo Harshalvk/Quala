@@ -18,6 +18,12 @@ export default function Home() {
         >
           Dashboard
         </Link>
+        <Link
+          href={"/pricing"}
+          className={buttonVariants({ variant: "secondary" })}
+        >
+          Pricing
+        </Link>
       </div>
     </div>
   );
