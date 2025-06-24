@@ -26,7 +26,6 @@ const Dashboard = async ({ searchParams }: PageProps) => {
   }
 
   const user = session.user;
-  console.log(user);
 
   const intent = searchParams.intent;
 
