@@ -1,9 +1,10 @@
-import GetUser from "@/actions/getUser";
 import DashboardPage from "@/components/DashboardPage";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import React from "react";
 import CategoryPageContent from "./_components/CategoryPageContent";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 interface PageProps {
   params: {
@@ -14,7 +15,16 @@ interface PageProps {
 const CategoryPage = async ({ params }: PageProps) => {
   if (typeof params.name !== "string") notFound();
 
-  const user = await GetUser();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    return <div>Session not found. Please Login</div>;
+  }
+
+  const user = session.user;
+
   if (!user) return notFound();
 
   const category = await prisma.eventCategory.findUnique({
