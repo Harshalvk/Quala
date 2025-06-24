@@ -14,15 +14,14 @@ const PaymentSuccessModal = () => {
   const { data: session } = authClient.useSession();
   const [isOpen, setIsOpen] = useState(true);
 
-  if (!session) {
-    return <div>Session not found. Please Login</div>;
-  }
-
-  const user = session.user;
-
   const { data, isPending } = useQuery({
     queryKey: ["user-plan"],
-    queryFn: async () => GetUserPlan(user.id),
+    queryFn: async () => {
+      if (!session) return null;
+      const user = session.user;
+      return await GetUserPlan(user.id);
+    },
+    enabled: !!session,
     refetchInterval: (query) => {
       return query.state.data?.plan === "PRO" ? false : 1000;
     },
@@ -47,9 +46,7 @@ const PaymentSuccessModal = () => {
         {isPending || !isPaymentSuccessfull ? (
           <div className="flex flex-col items-center justify-center h-64">
             <Loader className="mb-4 animate-spin transition-transform" />
-            <p className="text-lg/7 font-medium text-gray-900">
-              Upgrading your account...
-            </p>
+            <p className="text-lg/7 font-medium">Upgrading your account...</p>
             <p className="text-muted-foreground text-sm/6 mt-2 text-center text-pretty">
               Please wait while we process your request. This may take a moment.
             </p>
