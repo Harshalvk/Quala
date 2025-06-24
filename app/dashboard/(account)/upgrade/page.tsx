@@ -2,21 +2,20 @@ import DashboardPage from "@/components/DashboardPage";
 import { redirect } from "next/navigation";
 import React from "react";
 import UpgradePageContent from "./_components/UpgradePageContent";
-import { authClient } from "@/lib/auth-client";
-import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import GetUserById from "@/actions/getUserById";
 
 const UpgradePage = async () => {
-  const session = await authClient.getSession();
-  if (!session) {
-    redirect("/sign-in");
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.session) {
+    return <div>Session not found</div>;
   }
 
-  const user = await prisma.user.findFirst({
-    where: {
-      id: session.data?.user.id,
-      email: session.data?.user.email,
-    },
-  });
+  const user = await GetUserById(session.user.id);
 
   if (!user) {
     redirect("sign-in");
@@ -27,7 +26,7 @@ const UpgradePage = async () => {
       title={user.plan === "FREE" ? "Free Membership" : "Pro Membership"}
     >
       {user.plan ? (
-        <UpgradePageContent plan={user.plan} />
+        <UpgradePageContent user={user} />
       ) : (
         <div>No plan found</div>
       )}

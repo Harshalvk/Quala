@@ -4,19 +4,22 @@ import GetUsage from "@/actions/getUsage";
 import StripeCreateCheckoutSession from "@/actions/stripeCreateCheckoutSession";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plan } from "@prisma/client";
+import { User } from "@prisma/client";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { BarChart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const UpgradePageContent = ({ plan }: { plan: Plan }) => {
+const UpgradePageContent = ({ user }: { user: User }) => {
   const router = useRouter();
 
   const { data: usageData, isPending } = useQuery({
     queryKey: ["usage"],
-    queryFn: GetUsage,
+    queryFn: async () => {
+      if (!user) return null;
+      return await GetUsage(user.id ?? "");
+    },
   });
 
   const { mutate: createCheckoutSession } = useMutation({
@@ -30,10 +33,10 @@ const UpgradePageContent = ({ plan }: { plan: Plan }) => {
     <div className="max-w-3xl flex flex-col gap-8">
       <div>
         <h1 className="mt-2 text-xl/8 font-medium tracking-tight">
-          {plan === "PRO" ? "Plan: Pro" : "Plan: Free"}
+          {user.plan === "PRO" ? "Plan: Pro" : "Plan: Free"}
         </h1>
         <p className="text-sm/6 max-w-prose">
-          {plan === "PRO"
+          {user.plan === "PRO"
             ? "Thank you for supporting Quala. Find your increased usage limits below."
             : "Get access to more events, categories and premium support."}
         </p>
@@ -91,10 +94,10 @@ const UpgradePageContent = ({ plan }: { plan: Plan }) => {
         ) : (
           <span className="w-24 h-4 inline bg-muted-foreground animate-pulse ml-1 rounded-lg" />
         )}
-        {plan !== "PRO" ? (
+        {user.plan !== "PRO" ? (
           <span
             onClick={() => createCheckoutSession()}
-            className="inline underline text-white cursor-pointer ml-1"
+            className="inline underline text-yellow-900 cursor-pointer ml-1"
           >
             or upgrade now to increase your limit &rarr;
           </span>
