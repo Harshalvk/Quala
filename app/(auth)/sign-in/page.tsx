@@ -12,15 +12,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
+  const intent = searchParams.get("intent");
+
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <a href="#" className="flex items-center gap-2 self-center font-medium">
           Quala
         </a>
-        <LoginForm />
+        <LoginForm
+          redirectUrl={intent ? `/dashboard?intent=${intent}` : "/dashboard"}
+        />
       </div>
     </div>
   );
@@ -28,23 +34,26 @@ export default function LoginPage() {
 
 export function LoginForm({
   className,
-  ...props
-}: React.ComponentProps<"div">) {
+  redirectUrl,
+}: {
+  className?: string;
+  redirectUrl?: string;
+}) {
   const signInwithGitHub = async () => {
     await authClient.signIn.social({
       provider: "github",
-      callbackURL: "/dashboard",
+      callbackURL: redirectUrl ? redirectUrl : "/dashboard",
     });
   };
   const signInwithGoogle = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/dashboard",
+      callbackURL: redirectUrl ? redirectUrl : "/dashboard",
     });
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-6", className)}>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
