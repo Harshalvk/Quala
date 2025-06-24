@@ -7,7 +7,6 @@ import {
   BarChart2,
   Clock,
   Database,
-  Loader,
   Loader2,
   Trash2,
 } from "lucide-react";
@@ -18,12 +17,13 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import DeleteCategory from "@/actions/deleteCategory";
 import DashboardEmptyState from "./DashboardEmptyState";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const DashboardPageContent = () => {
   const [deletingCategory, setDeletingCategory] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: categories, isPaused: isEventCategoriesLoading } = useQuery({
+  const { data: categories, isPending: isEventCategoriesLoading } = useQuery({
     queryKey: ["user-event-categories"],
     queryFn: async () => {
       const res = await GetEventCategoires();
@@ -45,8 +45,10 @@ const DashboardPageContent = () => {
 
   if (isEventCategoriesLoading) {
     return (
-      <div className="flex items-center justify-center flex-1 h-full w-full">
-        <Loader className="animate-spin h-8 w-8" />
+      <div className="h-full w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Skeleton className="w-full h-60" />
+        <Skeleton className="w-full h-60" />
+        <Skeleton className="w-full h-60" />
       </div>
     );
   }
@@ -61,13 +63,11 @@ const DashboardPageContent = () => {
         {categories?.map((category) => (
           <li
             key={category.id}
-            className="relative group z-10 transition-all duration-200 hover:-translate-y-0.5 "
+            className="relative group z-10 hover:-translate-y-0.5 border rounded-lg shadow-sm transition-all duration-300 group-hover:shadow-md ring-1 ring-black/5 dark:ring-white/10 dark:bg-gradient-to-br dark:from-transparent dark:to-zinc-900/50"
           >
             <div className="absolute z-0 inset-px rounded-lg" />
 
-            <div className="pointer-events-none z-0 absolute inset-px rounded-lg shadow-sm transition-all duration-300 group-hover:shadow-md ring-1 ring-black/5 dark:ring-white/10 dark:bg-gradient-to-br dark:from-transparent dark:to-zinc-900/50" />
-
-            <div className="relative p-6 z-10 overflow-hidden">
+            <div className="relative p-6 z-10 overflow-hidden rounded-lg">
               <div className="absolute top-0 -right-14 -rotate-12 grayscale opacity-20 text-9xl">
                 {category.emoji}
               </div>
