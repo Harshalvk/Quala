@@ -6,14 +6,14 @@ import CategoryPageContent from "./_components/CategoryPageContent";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-interface PageProps {
-  params: {
-    name: string | string[] | undefined;
-  };
-}
+const CategoryPage = async ({
+  params,
+}: {
+  params: Promise<{ name: string | string[] }>;
+}) => {
+  const { name: categoryName } = await params;
 
-const CategoryPage = async ({ params }: PageProps) => {
-  if (typeof params.name !== "string") notFound();
+  if (typeof categoryName !== "string") notFound();
 
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -30,7 +30,7 @@ const CategoryPage = async ({ params }: PageProps) => {
   const category = await prisma.eventCategory.findUnique({
     where: {
       name_userId: {
-        name: params.name,
+        name: categoryName,
         userId: user.id,
       },
     },

@@ -16,7 +16,13 @@ interface PageProps {
   };
 }
 
-const Dashboard = async ({ searchParams }: PageProps) => {
+const Dashboard = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string }>;
+}) => {
+  const SearchParams = await searchParams;
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -27,7 +33,7 @@ const Dashboard = async ({ searchParams }: PageProps) => {
 
   const user = session.user;
 
-  const intent = searchParams.intent;
+  const intent = SearchParams.intent;
 
   if (intent === "upgrade") {
     const session = await createCheckoutSession({
@@ -38,7 +44,9 @@ const Dashboard = async ({ searchParams }: PageProps) => {
     if (session.url) redirect(session.url);
   }
 
-  const success = searchParams.success;
+  const success = Boolean(SearchParams.success);
+
+  console.log("want to print", typeof success);
 
   return (
     <>
