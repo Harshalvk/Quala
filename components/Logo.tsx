@@ -1,9 +1,18 @@
+import { cn } from "@/lib/utils";
 import Image from "next/image";
-import React from "react";
+import React, { HTMLAttributes } from "react";
 
-const Logo = ({ width, height }: { width?: number; height?: number }) => {
+interface LogoProps extends HTMLAttributes<HTMLDivElement> {
+  width?: number;
+  height?: number;
+}
+
+const Logo = ({ width, height, className, ...props }: LogoProps) => {
   return (
-    <div className="w-full flex items-center gap-1 select-none">
+    <div
+      className={cn("w-full flex items-center gap-1 select-none", className)}
+      {...props}
+    >
       <Image
         src={"/logo.png"}
         alt="logo"
@@ -11,9 +20,7 @@ const Logo = ({ width, height }: { width?: number; height?: number }) => {
         height={height || 100}
         className="size-8 dark:invert"
       />
-      <p className="text-3xl font-semibold tracking-tight">
-        Quala
-      </p>
+      <p className="text-3xl font-semibold tracking-tight">Quala</p>
     </div>
   );
 };
