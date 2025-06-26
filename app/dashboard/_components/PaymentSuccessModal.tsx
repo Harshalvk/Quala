@@ -1,6 +1,7 @@
 "use client";
 
 import GetUserPlan from "@/actions/getUserPlan";
+import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { authClient } from "@/lib/auth-client";
@@ -53,10 +54,8 @@ const PaymentSuccessModal = () => {
           </div>
         ) : (
           <>
-            <div className="relative aspect-video border w-full overflow-hidden rounded-lg">
-              <p>Thank you for upgrading</p>
-            </div>
             <div className="mt-6 flex flex-col items-center gap-1 text-center">
+              <Logo className="ml-10 mb-4" />
               <p className="text-lg/7 text-pretty tracking-tight font-medium">
                 Upgrade successfull!
               </p>
