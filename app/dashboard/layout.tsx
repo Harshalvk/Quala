@@ -128,7 +128,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   return (
-    <div className="relative h-screen flex flex-col md:flex-row overflow-hidden md:space-x-6 md:p-6 md:bg-zinc-200/50 dark:bg-zinc-800/50">
+    <div className="relative h-screen flex flex-col md:flex-row overflow-hidden md:space-x-6 md:p-6 md:bg-zinc-200/50 md:dark:bg-zinc-800/50">
       <div className="hidden md:block w-64 lg:w-80 border-r p-6 h-full text-brand-900 relative z-10 rounded-3xl shadow-sm bg-white dark:bg-zinc-950/80">
         <Sidebar />
       </div>
