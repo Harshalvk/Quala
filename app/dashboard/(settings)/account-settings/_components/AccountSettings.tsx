@@ -35,7 +35,7 @@ const AccountSettings = ({
               onChange={(e) => setDiscordId(e.target.value)}
               placeholder="Enter your Discord ID"
             />
-            <Button disabled={isPending} variant={"outline"} >
+            <Button disabled={isPending} variant={"outline"}>
               Update
             </Button>
           </div>
@@ -43,7 +43,7 @@ const AccountSettings = ({
             Don&apos;t know how to find your Discord ID?
             <Link
               href={"#"}
-              className="ml-1 hover:underline underline-offset-2 text-yellow-900"
+              className="ml-1 hover:underline underline-offset-2 text-pink-800/80"
             >
               Learn how to obtain it here.
             </Link>
@@ -59,15 +59,17 @@ const AccountSettings = ({
               onChange={(e) => setDiscordId(e.target.value)}
               placeholder="Enter your Slack ID"
             />
-            <Button disabled={isPending} variant={"outline"} >
+            <Button disabled={isPending} variant={"outline"}>
               Update
             </Button>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
             Don&apos;t know how to find your Slack ID?
             <Link
-              href={"#"}
-              className="ml-1 hover:underline underline-offset-2 text-yellow-900"
+              href={
+                "https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID"
+              }
+              className="ml-1 hover:underline underline-offset-2 text-pink-800/80"
             >
               Learn how to obtain it here.
             </Link>
