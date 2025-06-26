@@ -29,7 +29,7 @@ const UserAccount = () => {
   };
 
   if (!session) {
-    return <div>Could not found session. Please login</div>;
+    return <Skeleton className="h-10 w-full" />;
   }
 
   const user = session.user;
