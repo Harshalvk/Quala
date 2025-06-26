@@ -23,8 +23,6 @@ export async function POST(req: Request) {
         return new Response("Invalid metadata", { status: 400 });
       }
 
-      console.log("USERID", userId);
-
       await prisma.user.update({
         where: {
           id: userId,
