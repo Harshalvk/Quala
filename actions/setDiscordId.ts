@@ -5,14 +5,14 @@ import GetDBUser from "./getDBUser";
 import { prisma } from "@/lib/prisma";
 
 const SetDiscordIdType = z.object({
-  discordId: z.string().max(20),
+  discordId: z.string(),
 });
 
-export default async function SetDiscordId(discordId: string) {
+export default async function SetDiscordId(data: { discordId: string }) {
   try {
     const user = await GetDBUser();
 
-    const { discordId: parsedDiscordId } = SetDiscordIdType.parse(discordId);
+    const { discordId: parsedDiscordId } = SetDiscordIdType.parse(data);
 
     await prisma.user.update({
       where: {

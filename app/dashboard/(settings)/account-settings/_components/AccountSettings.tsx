@@ -6,19 +6,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const AccountSettings = ({
   discordId: initialDiscordId,
 }: {
   discordId: string;
 }) => {
-  const [discordId, setDiscordid] = useState(initialDiscordId);
+  const [discordId, setDiscordId] = useState(initialDiscordId);
 
-  const { mutate: setDiscordId, isPending } = useMutation({
-    mutationFn: async (discordId: string) => {
-      return await SetDiscordId(discordId);
+  const { mutate: updateDiscordId, isPending } = useMutation({
+    mutationFn: SetDiscordId,
+    onSuccess: (data) => {
+      alert(data.success);
     },
   });
 
@@ -35,7 +37,12 @@ const AccountSettings = ({
               onChange={(e) => setDiscordId(e.target.value)}
               placeholder="Enter your Discord ID"
             />
-            <Button disabled={isPending} variant={"outline"}>
+            <Button
+              disabled={isPending}
+              onClick={() => updateDiscordId({ discordId })}
+              variant={"outline"}
+            >
+              {isPending && <Loader2 className="animate-spin" />}
               Update
             </Button>
           </div>
@@ -55,8 +62,6 @@ const AccountSettings = ({
             <Input
               disabled={isPending}
               className="mt-1"
-              value={discordId}
-              onChange={(e) => setDiscordId(e.target.value)}
               placeholder="Enter your Slack ID"
             />
             <Button disabled={isPending} variant={"outline"}>
