@@ -46,8 +46,6 @@ const Dashboard = async ({
 
   const success = Boolean(SearchParams.success);
 
-  console.log("want to print", typeof success);
-
   return (
     <>
       {success ? <PaymentSuccessModal /> : null}

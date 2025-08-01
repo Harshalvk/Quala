@@ -71,8 +71,6 @@ const Sidebar = ({ onClose }: { onClose?: () => void }) => {
     if (selected) localStorage.setItem("selectedSidebarItem", selected);
   }, [selected]);
 
-  console.log(userPlan);
-
   return (
     <div className="space-y-4 md:space-y-6 relative z-20 flex flex-col h-full">
       <div className="hidden md:flex items-center">
