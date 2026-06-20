@@ -31,7 +31,7 @@ export const POST = async (req: NextRequest) => {
     }
 
     const apiKey = authHeader.split(" ")[1];
-
+ 
     if (!apiKey || apiKey.trim() === "") {
       return NextResponse.json({ message: "Invliad API Key" }, { status: 401 });
     }
