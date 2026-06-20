@@ -17,7 +17,7 @@ const EmptyStateCard = ({
         {children}
       </div>
       <div className="absolute z-0 inset-px rounded-lg" />
-      <div className="pointer-events-none z-0 absolute inset-px rounded-lg shadow-sm right-1 ring-black" />
+      <div className="pointer-events-none z-0 absolute inset-px rounded-lg right-1 ring-black" />
     </div>
   );
 };

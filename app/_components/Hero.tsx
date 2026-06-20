@@ -27,7 +27,7 @@ const Hero = () => {
         delay: stagger(0.1, { startDelay: 0.2 }),
         duration: 0.3,
         ease: "easeInOut",
-      }
+      },
     );
   };
 
@@ -69,8 +69,8 @@ const Hero = () => {
         id="hero"
         className="text-xs md:text-sm italic text-center w-3/4"
       >
-        With Quala, alerts are no longer interruptions. They’re enhancements —
-        subtle, timely, and perfectly in tune with your day.
+        With Quala, alerts are no longer interruptions. <br /> They&apos;re
+        enhancements — subtle, timely, and perfectly in tune with your day.
       </motion.p>
       <motion.span
         initial={{
@@ -88,7 +88,7 @@ const Hero = () => {
               router.push("/sign-in");
             }
           }}
-          className="rounded-full group inline-flex items-center gap-1 transition-all duration-300"
+          className="rounded-full group inline-flex items-center gap-1 transition-all duration-300 pr-1.5"
         >
           Get Started
           <span className="relative w-5 h-5 inline-flex overflow-hidden">

@@ -40,41 +40,52 @@ const UserAccount = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="w-full flex items-center gap-2 outline p-1 rounded-sm select-none">
-        <UserAvatar user={user} />
-        <div className="w-full flex flex-col items-start">
-          <span className="text-sm">{user.name}</span>
-          <span className="text-xs text-muted-foreground">{user.email}</span>
-        </div>
+      <DropdownMenuTrigger
+        className="w-full flex items-center gap-2 ring ring-border p-1 rounded-sm select-none"
+        asChild
+      >
+        <button className="w-full flex items-center gap-2">
+          <UserAvatar user={user} />
+          <div className="w-full flex flex-col items-start text-left">
+            <span className="text-sm">{user.name}</span>
+            <span className="text-xs text-muted-foreground">{user.email}</span>
+          </div>
+        </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-full">
-        <div className="w-full flex items-center justify-star gap-2 p-2">
+
+      <DropdownMenuContent
+        className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-0"
+        align="start"
+        sideOffset={4}
+      >
+        <div className="flex items-center gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
             {user.name && <p className="font-medium">{user.name}</p>}
             {user.email && (
-              <p className="w-[200px] truncate text-sm text-muted-foreground">
+              <p className="truncate text-sm text-muted-foreground">
                 {user.email}
               </p>
             )}
           </div>
         </div>
+
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild className="w-full">
-          <Link href={"/"}>Home</Link>
+
+        <DropdownMenuItem asChild>
+          <Link href="/">Home</Link>
         </DropdownMenuItem>
+
         <DropdownMenuSeparator />
+
         <DropdownMenuItem
           onClick={(e) => {
             e.preventDefault();
             handleLogout();
           }}
-          className="text-red-800 cursor-pointer dark:text-red-500 group"
+          className="text-red-800 dark:text-red-500 cursor-pointer group"
         >
-          {" "}
-          <p className="text-red-800 cursor-pointer dark:text-red-500">
-            Sign Out
-          </p>{" "}
-          <LogOut className="text-red-800 dark:text-red-500 cursor-pointer -translate-x-0.5 group-hover:translate-x-0.5 transition-transform" />
+          <span>Sign Out</span>
+          <LogOut className="ml-auto -translate-x-0.5 group-hover:translate-x-0 transition-transform" />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

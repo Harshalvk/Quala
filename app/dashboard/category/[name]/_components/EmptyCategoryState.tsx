@@ -55,11 +55,11 @@ const EmptyCategoryState = ({ categoryName }: { categoryName: string }) => {
       </p>
 
       <div className="w-full max-w-3xl rounded-lg shadow-lg overflow-hidden">
-        <div className="bg-gray-800 px-4 py-2 flex justify-between items-center">
+        <div className="bg-zinc-100 dark:bg-zinc-900 px-4 py-2 flex justify-between items-center">
           <div className="flex space-x-2">
-            <div className="size-3 rounded-full bg-red-500" />
-            <div className="size-3 rounded-full bg-yellow-500" />
-            <div className="size-3 rounded-full bg-green-500" />
+            <div className="size-3 rounded-full bg-zinc-500" />
+            <div className="size-3 rounded-full bg-zinc-500" />
+            <div className="size-3 rounded-full bg-zinc-500" />
           </div>
           <span className="text-muted-foreground text-sm">
             your-first-event.js

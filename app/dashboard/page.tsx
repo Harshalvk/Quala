@@ -53,8 +53,8 @@ const Dashboard = async ({
         title="Dashboard"
         hideBackButton
         cta={
-          <CreateEventCategoryModal>
-            <Button className="w-full sm:w-fit">
+          <CreateEventCategoryModal containerClassName="sm:w-fit">
+            <Button className="w-full">
               <Plus /> Add Category
             </Button>
           </CreateEventCategoryModal>
